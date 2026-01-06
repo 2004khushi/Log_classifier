@@ -1,4 +1,6 @@
 from processor_regex import classify_with_regex
+from processor_llm import classify_with_llm
+from processor_bert import classify_with_bert
 
 def classify(log_message):
     label = classify_with_regex(log_message)
