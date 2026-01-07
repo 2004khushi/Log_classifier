@@ -6,15 +6,30 @@ model_classification = joblib.load("models/LR_model.joblib")
 
 
 def classify_with_bert(log_message):
-    embeddings = model_embedding.encode([log_message])
-    probabilities = model_classification.predict_proba(embeddings)[0]
+
+    if isinstance(log_message, str):
+        log_messages = [log_message]
+    else:
+        log_messages = log_message
+
+
+    embeddings = model_embedding.encode(log_messages)
+
+    all_probabilities = model_classification.predict_proba(embeddings)
+    all_predictions = model_classification.predict(embeddings)
+
+    final_labels = []
 
     #here we using this bcs of the probab issue that we faced that undefined nhi aara tha bcs usko confusion hori thi kya h kya nhi
-    if max(probabilities) < 0.5:
-        return "Unclassified"
-    predicted_label = model_classification.predict(embeddings)[0]
+    for i in range(len(log_messages)):
+        probs = all_probabilities[i]
 
-    return predicted_label
+        if max(probs) < 0.5:
+            final_labels.append("Unclassified")
+        else:
+            final_labels.append(all_predictions[i])
+
+    return final_labels[0] if isinstance(log_message, str) else final_labels
 
 
 if __name__ == "__main__":

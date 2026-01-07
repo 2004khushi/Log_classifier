@@ -10,7 +10,7 @@ def classify_with_llm(log_msg):
     prompt = f'''Classify the log message into one of these categories: 
      Workflow Error or  Deprecation Warning.
     If you can't figure out a category, use "Unclassified".
-    Put the category inside <category> </category> tags. 
+    Display output as just the category name, without any other text.
     Log message: {log_msg}'''
 
     chat_completion = groq.chat.completions.create(
